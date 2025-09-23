@@ -1,3 +1,4 @@
+package classes;
 /**
  * Enum for vehicle manufacturers.
  * Represents the allowed makes of vehicles in the fleet.
