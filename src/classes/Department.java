@@ -4,6 +4,7 @@ package classes;
  * Enum class for the specified departments.
  * Represents the departments associated with employees
  * whom are eligible to book trips
+ *
  @author Jai Patel, Aaman Gafur
  */
 

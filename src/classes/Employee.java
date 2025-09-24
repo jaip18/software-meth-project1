@@ -3,6 +3,7 @@ package classes;
 /**
  * Enum class for employees.
  * Represents the eligible employees who can book vehicles
+ *
  * @author Jai Patel, Aaman Gafur
  */
 

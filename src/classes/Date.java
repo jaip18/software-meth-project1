@@ -3,6 +3,7 @@ package classes;
  * This class implements the Date object.
  * The Date class represents a date on the calendar in the form M/D/YYYY.
  * Here, a Date can be compared, printed, and validated.
+ *
  * @author Aaman Gafur, Jai Patel
  */
 public class Date implements Comparable<Date>{
