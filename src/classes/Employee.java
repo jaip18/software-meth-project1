@@ -39,4 +39,24 @@ public enum Employee {
     public Department getDepartment(){
         return this.dept;
     }
+
+    public static void main(String[] args){
+
+        // Test Case 1: Printing out entire enum w/ its attribute
+        for(Employee emp : Employee.values()) {
+            System.out.println("Name: " + emp.name() + " Dept: " + emp.getDepartment());
+        }
+
+        System.out.println();
+
+        // Test Case 2:
+        Employee emp = Employee.PATEL;
+        System.out.println("Employee works for " + emp.getDepartment());
+
+        if(emp.getDepartment() == Department.CS){
+            System.out.println("Pass");
+        } else {
+            System.out.println("Fail");
+        }
+    }
 }
