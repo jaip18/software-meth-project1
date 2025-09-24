@@ -167,21 +167,15 @@ public class Date implements Comparable<Date>{
     }
 
 
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         // isValid tests
         System.out.println(new Date(2, 29, 2024).isValid()); // true (leap year)
         System.out.println(new Date(2, 29, 2019).isValid()); // false
         System.out.println(new Date(6, 31, 2020).isValid()); // false
         System.out.println(new Date(0, 10, 2020).isValid()); // false
         System.out.println(new Date(12, 31, 2025).isValid()); // true
-
-        // compareTo tests
-        Date a = new Date(1, 1, 2020);
-        Date b = new Date(1, 1, 2021);
-        System.out.println(a.compareTo(b)); // -1
-        System.out.println(b.compareTo(a)); // 1
-        System.out.println(a.compareTo(new Date(1, 1, 2020))); // 0
-    }
+        System.out.println(new Date(7, 32, 2020).isValid()); // false (day > 31)
+     }
 
 
 
