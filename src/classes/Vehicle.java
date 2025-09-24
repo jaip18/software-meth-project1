@@ -134,20 +134,10 @@ public class Vehicle implements Comparable<Vehicle> {
         Vehicle v3 = new Vehicle("123ABC", d3, Make.FORD, 60000); // same plate as v1
         Vehicle v4 = new Vehicle("789LMN", d2, Make.FORD, 20000);
 
-        System.out.println("toString() output:");
-        System.out.println(v1); // expected format: plate:MAKE:M/D/YYYY [mileage:value]
-        System.out.println(v2);
-        System.out.println();
-
-        System.out.println("equals() output:");
-        System.out.println(v1.equals(v2)); // false (different plate)
-        System.out.println(v1.equals(v3)); // true  (same plate)
-        System.out.println();
-
         System.out.println("compareTo() output:");
         System.out.println(v1.compareTo(v2)); // compare FORD vs TOYOTA (depends on enum order)
         System.out.println(v1.compareTo(v3)); // same make, same date -> 0
-        System.out.println(v1.compareTo(v4)); // same make, earlier date -> -1 or 1 depending on order
+        System.out.println(v2.compareTo(v1)); // same make, earlier date -> -1 or 1 depending on order
     }
 
 
