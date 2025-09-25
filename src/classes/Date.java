@@ -39,7 +39,6 @@ public class Date implements Comparable<Date>{
         this.year = year;
     }
 
-
     /**
      * Copy constructor to clone a Date object.
      * @param other the Date object to copy
@@ -49,7 +48,6 @@ public class Date implements Comparable<Date>{
         this.day = other.day;
         this.year = other.year;
     }
-
 
 //GETTER METHODS
 
@@ -76,7 +74,6 @@ public class Date implements Comparable<Date>{
     public int getDay() {
         return day;
     }
-
     /**
      * Checks whether a date is equal to another date.
      * The dates are equal if year, month, and day all match.
@@ -94,6 +91,15 @@ public class Date implements Comparable<Date>{
         return false;
     }
 
+    // Define constant for if this.date occurs after other.date
+    private static final int THIS_AFTER_OTHER = 1;
+
+    // Define constant for if this.date occurs before other.date
+    private static final int THIS_BEFORE_OTHER = -1;
+
+    // Define constant for if this.date and other.date are the same date
+    private static final int SAME_DATE = 0;
+
     /**
      * Compare two Date objects.
      * The comparison is done by year, then by month, then day.
@@ -104,24 +110,24 @@ public class Date implements Comparable<Date>{
     @Override
     public int compareTo(Date other) {
         if (this.year > other.year) {
-            return 1;
+            return THIS_AFTER_OTHER;
         }
         if (this.year < other.year) {
-            return -1;
+            return THIS_BEFORE_OTHER;
         }
         if (this.month > other.month) {
-            return 1;
+            return THIS_AFTER_OTHER;
         }
         if (this.month < other.month) {
-            return -1;
+            return THIS_BEFORE_OTHER;
         }
         if (this.day > other.day) {
-            return 1;
+            return THIS_AFTER_OTHER;
         }
         if (this.day < other.day) {
-            return -1;
+            return THIS_BEFORE_OTHER;
         }
-        return 0;
+        return SAME_DATE;
     }
 
     /**
@@ -132,7 +138,6 @@ public class Date implements Comparable<Date>{
     public String toString() {
         return month + "/" + day + "/" + year;
     }
-
 
     /**
      * Checks if the given year is a leap year.
@@ -164,8 +169,7 @@ public class Date implements Comparable<Date>{
 
         return day > 0 && day <= days[month-1];
 
-    }
-
+     }
 
      public static void main(String[] args) {
         // isValid tests
