@@ -2,6 +2,9 @@ package classes;
 
 /**
  * This class implements the Trip object
+ * Includes a Booking object, mileage of vehicle at the start of the trip, and
+ * mileage at the end of trip.
+ * Trip objects are equal if they have the same booking details.
  * @author Jai Patel
  */
 
@@ -10,52 +13,72 @@ public class Trip {
     private int beginMileage;
     private int endMileage;
 
+    /**
+     * Empty constructor to create an empty Booking object.
+     */
     public Trip(){
         this.booking = new Booking();
         this.beginMileage = 0;
         this.endMileage = 0;
     }
 
+    /**
+     * Copy constructor to create a copy of a Trip object.
+     * @param other the Trip to copy
+     */
     public Trip(Trip other){
         this.booking = other.booking;
         this.beginMileage = other.beginMileage;
         this.endMileage = other.endMileage;
     }
 
+    /**
+     * Constructs a Trip object with the given 3 parameters.
+     *
+     * @param booking the booking associated with the trip
+     * @param beginMileage the starting value on the odometer of the vehicle used for the trip
+     * @param endMileage the ending value on the odometer of the vehicle used for the trip
+     */
     public Trip(Booking booking, int beginMileage, int endMileage){
         this.booking = booking;
         this.beginMileage = beginMileage;
         this.endMileage = endMileage;
     }
 
+    /**
+     * Getter for booking of the trip.
+     *
+     * @return the booking object associated with trip
+     */
     public Booking getBooking(){
         return this.booking;
     }
 
+    /**
+     * Getter for the mileage of the vehicle at the start of the trip.
+     *
+     * @return the beginning mileage
+     */
     public int getBeginMileage(){
         return this.beginMileage;
     }
 
+    /**
+     * Getter for the mileage of the vehicle at the rnd of the trip.
+     *
+     * @return the ending mileage
+     */
     public int getEndMileage(){
         return this.endMileage;
     }
 
-    public void setBooking(Booking booking){
-        this.booking = booking;
-    }
-
-    public void setBeginMileage(int beginMileage){
-        this.beginMileage = beginMileage;
-    }
-
-    public void setEndMileage(int endMileage){
-        this.endMileage = endMileage;
-    }
-
-    public boolean isValid(){
-        return this.booking.isValid() && this.getEndMileage() - this.beginMileage >= 0;
-    }
-
+    /**
+     * Two trips are equal if they have the same booking attributes.
+     *
+     * @param o the object to compare with
+     * @return true if obj is a Trip with the same Booking object,
+     *         false otherwise
+     */
     @Override
     public boolean equals(Object o){
         if(o instanceof Trip trip){
@@ -64,6 +87,13 @@ public class Trip {
         return false;
     }
 
+    /**
+     * Returns a string representation of this Trip.
+     * Format: {plate} {beginDate} ~ {endDate} original mileage:{beginMileage} current mileage:{endMileage}
+                mileage used: {endMileage - beginMileage}
+     *
+     * @return formatted string of this Trip according to the instructions.
+     */
     @Override
     public String toString(){
         int mileageUsed = this.endMileage - this.beginMileage;
@@ -95,13 +125,7 @@ public class Trip {
         System.out.println(trip2);
         System.out.println(trip3);
 
-        System.out.println(trip3.isValid());
-        System.out.println(trip2.isValid());
-
         System.out.println(trip1.equals(trip2));
         System.out.println(trip1.equals(trip1));
-
-
-
     }
 }
