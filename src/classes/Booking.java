@@ -1,4 +1,5 @@
 package classes;
+import java.util.Calendar
 
 /**
  * This class implements the Booking object.
