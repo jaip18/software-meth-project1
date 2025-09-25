@@ -1,8 +1,11 @@
 package classes;
+import java.util.Calendar;
 
 /**
- * This class implements the Booking object
- * @author Jai Patel
+ * This class implements the Booking object.
+ * Includes a beginning date, end date, employee who booked, and vehicle,
+ * Bookings are equal if they have the same beginning and end date, and same vehicle,
+ * @author Jai Patel, Aaman Gafur
  */
 
 public class Booking {
@@ -11,7 +14,20 @@ public class Booking {
     private Employee employee;
     private Vehicle vehicle;
 
+    /**
+     * Copy constructor to create a copy of a Booking object.
+     * @param other the Booking to copy
+     */
+    public Booking(Booking other){
+        this.begin = new Date(other.begin);
+        this.end = new Date(other.end);
+        this.employee = other.employee;
+        this.vehicle = new Vehicle(other.vehicle);
+    }
 
+    /**
+     * Empty constructor to create an empty Booking object.
+     */
     public Booking(){
         this.begin = new Date();
         this.end = new Date();
@@ -19,13 +35,14 @@ public class Booking {
         this.vehicle = new Vehicle();
     }
 
-    public Booking(Booking other){
-        this.begin = other.begin;
-        this.end = other.end;
-        this.employee = other.employee;
-        this.vehicle = other.vehicle;
-    }
-
+    /**
+     * Constructs a Booking object with the given 4 parameters.
+     *
+     * @param begin the beginning date of the booking
+     * @param end the ending date of the booking
+     * @param employee the employee making the booking
+     * @param vehicle the vehicle being reserved
+     */
     public Booking(Date begin, Date end, Employee employee, Vehicle vehicle) {
         this.begin = begin;
         this.end = end;
@@ -33,104 +50,152 @@ public class Booking {
         this.vehicle = vehicle;
     }
 
+    /**
+     * Getter for the beginning date of the booking.
+     *
+     * @return the beginning date
+     */
     public Date getBegin(){
         return this.begin;
     }
 
+    /**
+     * Getter for the ending date of the booking.
+     *
+     * @return the ending date
+     */
     public Date getEnd(){
         return this.end;
     }
 
+    /**
+     * Getter for the employee who made the booking.
+     *
+     * @return the employee
+     */
     public Employee getEmployee(){
         return this.employee;
     }
 
+    /**
+     * Getter for the vehicle reserved in the booking.
+     *
+     * @return the vehicle
+     */
     public Vehicle getVehicle(){
         return this.vehicle;
     }
 
-    public void setBegin(Date date){
-        this.begin = date;
+    /**
+     * Checks if the booking's start date is more than 3 months in the future
+     * from the current date.
+     * This helper method enforces the rule that bookings cannot be made over 3
+     * months in advance.
+     *
+     * @return true if booking is within 3 months from today, false otherwise
+     */
+    public boolean isTooFarInAdvance(){
+        Calendar today = Calendar.getInstance();
+
+        Calendar inThreeMonths = (Calendar) today.clone();
+        inThreeMonths.add(Calendar.MONTH, 3);
+
+        Calendar bookingCal = Calendar.getInstance();
+        bookingCal.set(this.begin.getYear(), this.begin.getMonth(), this.begin.getDay());
+
+        return bookingCal.after(inThreeMonths);
     }
 
-    public void setEnd(Date date){
-        this.end = date;
+    // Define a constant for the conversion of 7 days to milliseconds
+    private static final long SEVEN_DAYS_MILLIS = 7L * 24 * 60 * 60 * 1000;
+
+    /**
+     * Checks if the booking's end date is more than 7 days after its start
+     * date.
+     * This helper method enforces the rule that bookings cannot last over 7
+     * days from start date to end date.
+     *
+     * @return true if booking under 7 days in time interval, false otherwise.
+     */
+    public boolean isTooLong(){
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(this.begin.getYear(), this.begin.getMonth(), this.begin.getDay());
+        long beginTimeMillis = beginCal.getTimeInMillis();
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.set(this.end.getYear(), this.end.getMonth(), this.end.getDay());
+        long endTimeMillis = endCal.getTimeInMillis();
+
+        long duration = endTimeMillis - beginTimeMillis;
+
+        return duration > SEVEN_DAYS_MILLIS;
     }
 
-    public void setEmployee(Employee employee){
-        this.employee = employee;
-    }
-
-    public void setVehicle(Vehicle vehicle){
-        this.vehicle = vehicle;
-    }
-
-    public boolean isValid(){
-        if(!this.begin.isValid() || !this.end.isValid()){
-            return false;
-        }
-
-        else if(this.begin.compareTo(this.end) > 0){
-            return false;
-        }
-
-        else if(this.employee == null){
-            return false;
-        }
-
-        return this.vehicle != null;
-    }
-
+    /**
+     * Two bookings are equal if they have the same vehicle, beginning date, and ending date.
+     *
+     * @param o the object to compare with
+     * @return true if obj is a Booking with the same vehicle,
+     *         beginning date, and ending date, false otherwise
+     */
     @Override
-    // booking validity check needed
     public boolean equals(Object o){
-        if (o instanceof Booking booking && this.isValid() && booking.isValid()){
-            return this.vehicle.equals(booking.vehicle) && this.begin.equals(booking.begin) && this.end.equals(booking.end);
+        if (o instanceof Booking){
+            Booking booking = (Booking) o;
+            return booking.begin.equals(this.begin)
+                    && booking.end.equals(this.end)
+                    && booking.vehicle.equals(this.vehicle);
         }
-
         return false;
     }
 
+    /**
+     * Returns a string representation of this Booking.
+     * Format: plate:make:obtained [mileage:value] [beginning M/D/YYYY ending M/D/YYYY:EMPLOYEE]
+     *
+     * @return formatted string of this Booking according to the instructions.
+     */
     @Override
     public String toString(){
-        return String.format("%s:%s:%s [mileage:%s] [beginning %s ending %s:%s]", this.vehicle.getPlate(), this.vehicle.getMileage(),
-                this.vehicle.getObtained(), this.vehicle.getMileage(), this.begin, this.end, this.employee);
+        return String.format("%s:%s:%s [mileage:%s] [beginning %s ending %s:%s]",
+                this.vehicle.getPlate(), this.vehicle.getMake(),
+                this.vehicle.getObtained(), this.vehicle.getMileage(),
+                this.begin, this.end, this.employee);
     }
 
-    public static void main(String[] args){
-        Date d1 = new Date(1, 20, 2025);
-        Date d2 = new Date(10, 1, 2000);
-        Date d3 = new Date(13, 32, 2025);
+    public static void main(String[] args) {
+        Date obtained = new Date(11, 1, 2019);
+        Vehicle v1 = new Vehicle("67359S", obtained, Make.FORD, 59644);
+        Vehicle v2 = new Vehicle("123ABC", obtained, Make.FORD, 60000);
 
-        Vehicle v1 = new Vehicle("123ABC", d1, Make.FORD, 50000);
-        Vehicle v2 = new Vehicle("456XYZ", d2, Make.TOYOTA, 30000);
-        Vehicle v3 = new Vehicle("123ABC", d3, Make.FORD, 60000); // same plate as v1
+        Date begin1 = new Date(10, 31, 2025);
+        Date end1   = new Date(11, 2, 2025);
+        Date begin2 = new Date(10, 31, 2025);
+        Date end2   = new Date(11, 2, 2025);
 
-        Booking b1 = new Booking(d2, d1, Employee.KAUR, v3);
-        Booking b2 = new Booking(d1, d3, Employee.KAUR, v1);
-        Booking b3 = new Booking(d1, d2, Employee.KAUR, v2);
-        Booking b4 = new Booking(d1, d3, Employee.KAUR, new Vehicle());
+        Booking b1 = new Booking(begin1, end1, Employee.KAUR, v1);
+        Booking b2 = new Booking(begin2, end2, Employee.KAUR, new Vehicle(v1)); // same as b1
+        Booking b3 = new Booking(begin1, end1, Employee.KAUR, v2);              // different vehicle
 
-
-        // checking printing format
-        System.out.println(b1);
-        System.out.println(b2);
-        System.out.println(b3);
-        System.out.println(b4);
+        System.out.println("toString() tests:");
+        System.out.println("Booking 1: " + b1);
+        System.out.println("Booking 2: " + b2);
+        System.out.println("Booking 3: " + b3);
         System.out.println();
 
-        // testing isValid method
-        System.out.println(b1.isValid()); // true
-        System.out.println(b2.isValid()); // false
-        System.out.println(b3.isValid()); // false
-        System.out.println(b4.isValid()); // false
-        System.out.println();
-
-        // testing compareTo method
-        System.out.println(b1.equals(new Booking(d2, d1, Employee.KAUR, v3))); // true
-        System.out.println(b2.equals(new Booking(d1, d3, Employee.KAUR, v1))); // true
-        System.out.println(b2.equals(b4)); // false threw invalid booking
-        System.out.println(b1.equals(b3)); // false
+        System.out.println("equals() tests:");
+        System.out.println("b1.equals(b2) (expect true): " + b1.equals(b2));
+        System.out.println("b1.equals(b3) (expect false): " + b1.equals(b3));
     }
+
 
 }
+
+
+
+
+
+
+
+
+
