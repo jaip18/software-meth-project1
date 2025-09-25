@@ -1,4 +1,258 @@
 package classes;
 
+/**
+ * This class implements the Reservation object
+ * Includes an array of bookings and the number of bookings total.
+ *
+ * @author Jai Patel
+ */
 public class Reservation {
+    private Booking[] bookings;
+    private int size;
+
+    /**
+     * Default constructor to create an empty Reservation object.
+     */
+    public Reservation(){
+        this.bookings = new Booking[4];
+        this.size = 0;
+    }
+
+    /**
+     * Getter for the array of bookings.
+     *
+     * @return array of bookings
+     */
+    public Booking[] getBookings(){
+        return this.bookings;
+    }
+
+    /**
+     * Getter for the size of the bookings array.
+     *
+     * @return the size of the bookings array
+     */
+    public int getSize(){
+            return this.size;
+    }
+
+    // Define the constant for not found
+    private static final int NOT_FOUND = -1;
+
+    /**
+     * Searches through bookings array to check if passed through booking
+     * is present in the array.
+     *
+     * @param book booking to be searched for
+     * @return index where booking is located, otherwise NOT_FOUND is returned
+     */
+    private int find(Booking book){
+        Booking[] bookings = this.bookings;
+
+        for(int i = 0; i < bookings.length; i++){
+            if(bookings[i].equals(book)){
+                return i;
+            }
+        }
+
+        return NOT_FOUND;
+    }
+
+    /**
+     * Resizes the amount of bookings the array can handle. The new resized array
+     * will have a length double of the previous array.
+     */
+    private void grow(){
+        int capacity = this.size * 2;
+
+        Booking[] resizedList = new Booking[capacity];
+
+        for(int i = 0; i < this.size; i++){
+            resizedList[i] = this.bookings[i];
+        }
+
+        this.bookings = resizedList;
+    }
+
+    /**
+     * This method will append a new booking to the of the list of bookings.
+     * It will first check if the list is full, if so the array will grow, if not
+     * the new booking will be added at the end of the list.
+     */
+    public void add(Booking booking){
+        if(size == this.bookings.length){
+            this.grow();
+        }
+
+        bookings[size] = booking;
+        size++;
+    }
+
+    /**
+     * This method will delete a booking, and accept a Booking object as a
+     * parameter.
+     * If Booking object is found in the list, it will be removed and all
+     * subsequent elements will be shifted over.
+     *
+     * @param booking specific Booking to be removed from the list
+     */
+    public void remove(Booking booking){
+        int index = this.find(booking);
+
+        if (index == NOT_FOUND){
+            return;
+        }
+
+        for(int i = index; i < this.size - 1; i++){
+            this.bookings[i] = this.bookings[i + 1];
+        }
+
+        this.size--;
+
+        this.bookings[this.size] = null;
+    }
+
+    /**
+     * Searches through bookings array to check if passed through booking
+     * is present in the array.
+     *
+     * @param booking booking to be searched for
+     * @return true if not, false if not found
+     */
+    public boolean contains(Booking booking) {
+        return this.find(booking) != NOT_FOUND;
+    }
+
+    /**
+     * Prints out bookings, order based upon the plates of the vehicles,
+     * then the date obtained
+     *
+     */
+    public void printByVehicle(){
+        if(this.size == 0){
+            System.out.println("No reservation have been made.");
+            return;
+        }
+
+        Booking[] array = this.bookings;
+        insertionSortByPlate(bookings);
+
+        for(Booking booking: array){
+            System.out.println(booking);
+        }
+    }
+
+    /**
+     * Helper method to printByVehicle(), which sorts the booking array
+     * based upon plates then the date obtained using Insertion Sort.
+     *
+     * @param array booking array to be sorted in place by plate
+     */
+    private void insertionSortByPlate(Booking[] array){
+        int n = this.size;
+
+        for(int i = 1; i < n; i++){
+            Booking keyBooking = array[i];
+            String keyPlate = keyBooking.getVehicle().getPlate();
+
+            int j = i - 1;
+
+            while(j >= 0){
+                String comparePlate = array[j].getVehicle().getPlate();
+                if(keyPlate.compareTo(comparePlate) < 0){
+                    array[j + 1] = array[j];
+                    j = j - 1;
+                }
+                else {
+                    break;
+                }
+            }
+
+            array[j + 1] = keyBooking;
+        }
+    }
+
+    /**
+     * Prints out bookings, order based upon the departments of the
+     * employees who booked the trips, then by order by employee
+     *
+     */
+    public void printByDept(){
+        if(this.size == 0){
+            System.out.println("No reservation have been made.");
+            return;
+        }
+
+        Booking[] array = this.bookings;
+        insertionSortByDept(bookings);
+
+        for(Booking booking: array){
+            System.out.println(booking);
+        }
+    }
+
+    /**
+     * Helper method to printByDept(), which sorts the booking array
+     * based upon departments then the employees using Insertion Sort.
+     *
+     * @param array booking array to be sorted in place by department
+     */
+    private void insertionSortByDept(Booking[] array){
+        int n = this.size;
+
+        for(int i = 1; i < n; i++){
+            Booking keyBooking = array[i];
+            Department keyDept = keyBooking.getEmployee().getDepartment();
+
+            int j = i - 1;
+
+            while(j >= 0){
+                Department compareDept = array[j].getEmployee().getDepartment();
+                if(keyDept.compareTo(compareDept) < 0){
+                    array[j + 1] = array[j];
+                    j = j - 1;
+                }
+                else {
+                    break;
+                }
+            }
+
+            array[j + 1] = keyBooking;
+        }
+    }
+
+    public static void main(String[] args){
+        Date d1 = new Date(1, 18, 2025);
+        Date d2 = new Date(1, 19, 2025);
+        Date d3 = new Date(3, 21, 2025);
+        Date d4 = new Date(2, 23, 2025);
+        Date d5 = new Date(3, 15, 2025);
+        Date d6 = new Date(4, 15, 2025);
+        Date d7 = new Date(5, 16, 2025);
+        Date d8 = new Date(8, 23, 2025);
+
+        Vehicle v1 = new Vehicle("123ABC", d1, Make.FORD, 50000);
+        Vehicle v2 = new Vehicle("456XYZ", d2, Make.TOYOTA, 30000);
+        Vehicle v3 = new Vehicle("123ABC", d3, Make.FORD, 60000); // same plate as v1
+        Vehicle v4 = new Vehicle("789LMN", d2, Make.FORD, 20000);
+
+        Booking b1 = new Booking(d1, d5, Employee.KAUR, v1);
+        Booking b2 = new Booking(d1, d3, Employee.PATEL, v4);
+        Booking b3 = new Booking(d1, d6, Employee.HARPER, v2);
+        Booking b4 = new Booking(d1, d7, Employee.RAMESH, v3);
+        Booking b5 = new Booking(d1, d8, Employee.TAYLOR, v2);
+
+        Reservation reservation = new Reservation();
+        reservation.add(b1);
+        reservation.add(b2);
+        reservation.add(b3);
+        reservation.add(b4);
+        reservation.add(b5);
+        System.out.println("Reservation size:" + reservation.size);
+        System.out.println();
+        System.out.println("Printing by Dept");
+        reservation.printByDept();
+        System.out.println("Printing by Plate");
+        reservation.printByVehicle();
+    }
 }
