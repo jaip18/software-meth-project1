@@ -76,6 +76,50 @@ public class Booking {
     }
 
     /**
+     * Checks if the booking's start date is more than 3 months in the future
+     * from the current date.
+     * This helper method enforces the rule that bookings cannot be made over 3
+     * months in advance.
+     *
+     * @return true if booking is within 3 months from today, false otherwise
+     */
+    public boolean isTooFarInAdvance(){
+        Calendar today = Calendar.getInstance();
+
+        Calendar inThreeMonths = (Calendar) today.clone();
+        inThreeMonths.add(Calendar.MONTH, 3);
+
+        Calendar bookingCal = Calendar.getInstance();
+        bookingCal.set(this.begin.getYear(), this.begin.getMonth(), this.begin.getDay());
+
+        return bookingCal.after(inThreeMonths);
+    }
+    // Define a constant for the conversion of 7 days to milliseconds
+    private static final long SEVEN_DAYS_MILLIS = 7L * 24 * 60 * 60 * 1000;
+
+    /**
+     * Checks if the booking's end date is more than 7 days after its start
+     * date.
+     * This helper method enforces the rule that bookings cannot last over 7
+     * days from start date to end date.
+     *
+     * @return true if booking under 7 days in time interval, false otherwise
+     */
+    public boolean isTooLong(){
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(this.begin.getYear(), this.begin.getMonth(), this.begin.getDay());
+        long beginTimeMillis = beginCal.getTimeInMillis();
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.set(this.end.getYear(), this.end.getMonth(), this.end.getDay());
+        long endTimeMillis = endCal.getTimeInMillis();
+
+        long duration = endTimeMillis - beginTimeMillis;
+
+        return duration > SEVEN_DAYS_MILLIS;
+    }
+
+    /**
      * Two bookings are equal if they have the same vehicle, beginning date, and ending date.
      *
      * @param o the object to compare with
