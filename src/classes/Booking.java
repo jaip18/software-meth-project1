@@ -1,5 +1,5 @@
 package classes;
-import java.util.Calendar
+import java.util.Calendar;
 
 /**
  * This class implements the Booking object.
@@ -23,6 +23,16 @@ public class Booking {
         this.end = new Date(other.end);
         this.employee = other.employee;
         this.vehicle = new Vehicle(other.vehicle);
+    }
+
+    /**
+     * Empty constructor to create an empty Booking object.
+     */
+    public Booking(){
+        this.begin = new Date();
+        this.end = new Date();
+        this.employee = null;
+        this.vehicle = new Vehicle();
     }
 
     /**
@@ -95,6 +105,7 @@ public class Booking {
 
         return bookingCal.after(inThreeMonths);
     }
+
     // Define a constant for the conversion of 7 days to milliseconds
     private static final long SEVEN_DAYS_MILLIS = 7L * 24 * 60 * 60 * 1000;
 
@@ -104,7 +115,7 @@ public class Booking {
      * This helper method enforces the rule that bookings cannot last over 7
      * days from start date to end date.
      *
-     * @return true if booking under 7 days in time interval, false otherwise
+     * @return true if booking under 7 days in time interval, false otherwise.
      */
     public boolean isTooLong(){
         Calendar beginCal = Calendar.getInstance();
@@ -179,7 +190,6 @@ public class Booking {
 
 
 }
-
 
 
 
