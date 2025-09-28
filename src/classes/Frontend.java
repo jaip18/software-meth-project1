@@ -68,6 +68,7 @@ public class Frontend {
 
                     String plate = deleteParts[1];
 
+
                     boolean isInFleet = fleet.contains(new Vehicle(plate, new Date(), null, 0));
 
 
