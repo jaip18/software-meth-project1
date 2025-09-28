@@ -13,8 +13,8 @@ public class TripList {
      * Private inner class representing a single node in the circular linked list.
      * Includes a trip and a pointer to the next trip in the list
      */
-    private class Node{
-        private Trip trip;
+    private static class Node{
+        private final Trip trip;
         private Node next;
 
         /**
@@ -29,14 +29,12 @@ public class TripList {
     }
 
     private Node last;
-    private int size;
 
     /**
      * Default constructor to create an empty TripList object.
      */
     public TripList(){
         this.last = null;
-        this.size = 0;
     }
 
     /**
@@ -54,7 +52,19 @@ public class TripList {
      * @return the size of list
      */
     public int getSize(){
-        return this.size;
+        if(last == null){
+            return 0;
+        }
+
+        Node curr = this.last.next;
+        int size = 0;
+
+        do{
+            curr = curr.next;
+            size++;
+        } while (curr != this.last.next);
+
+        return size;
     }
 
     /**
@@ -65,7 +75,7 @@ public class TripList {
     public void add(Trip trip){
         Node newNode = new Node(trip);
 
-        if(this.size == 0){
+        if(this.getSize() == 0){
             newNode.next = newNode;
         }
         else {
@@ -74,7 +84,6 @@ public class TripList {
         }
 
         this.last = newNode;
-        this.size++;
     }
 
     /**
@@ -82,7 +91,7 @@ public class TripList {
      * Trips will be printed out based on order of their ending dates
      */
     public void print(){
-        if(this.size == 0){
+        if(this.getSize() == 0){
             System.out.println("No trips have been completed yet.");
             return;
         }
@@ -102,15 +111,15 @@ public class TripList {
      * @return an Array of Trip objects
      */
     public Trip[] toArray(){
-        if(this.size == 0){
+        if(this.getSize() == 0){
             return new Trip[0];
         }
 
-        Trip[] tripArray = new Trip[this.size];
+        Trip[] tripArray = new Trip[this.getSize()];
 
         Node curr = this.last.next;
 
-        for(int i = 0; i < this.size; i++){
+        for(int i = 0; i < this.getSize(); i++){
             tripArray[i] = curr.trip;
             curr = curr.next;
         }
