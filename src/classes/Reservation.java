@@ -138,6 +138,16 @@ public class Reservation {
         return false;
     }
 
+    /**
+     * Searches through bookings array to check if a vehicle with a given license
+     * plate has a booking conflict. A vehicle is determined to be unavailable if
+     * there is any overlap with an existing booking date.
+     *
+     * @param plate plate of vehicle whose availability is being checked
+     * @param begin proposed date for start of booking
+     * @param end proposed date for ending of booking
+     * @return true if available, false if unavailable
+     */
     public boolean isAvailable(String plate, Date begin, Date end){
         for(int i = 0; i < this.size; i++){
             Booking existingBooking = this.bookings[i];
@@ -154,6 +164,16 @@ public class Reservation {
         return true;
     }
 
+    /**
+     * Searches through bookings array to check if a employee has a booking
+     * conflict. A vehicle is determined to be unavailable if there is any
+     * overlap with an existing booking date.
+     *
+     * @param employee employee to check for time conflicts
+     * @param begin proposed date for start of booking
+     * @param end proposed date for ending of booking
+     * @return true if a conflicting booking is found, false if otherwise
+     */
     public boolean hasTimeConflict(Employee employee, Date begin, Date end){
         for(int i = 0; i < this.size; i++) {
             Booking existingBooking = this.bookings[i];
