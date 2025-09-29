@@ -124,6 +124,54 @@ public class Reservation {
     }
 
     /**
+     * Searches through bookings array to check a vehicle has been booked
+     *
+     * @param plate booking to be searched for by plate
+     * @return true if booked, false if not booked
+     */
+    public boolean isBooked(String plate){
+        for(Booking booking: this.getBookings()){
+            if(booking.getVehicle().getPlate().equals(plate)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAvailable(String plate, Date begin, Date end){
+        for(int i = 0; i < this.size; i++){
+            Booking existingBooking = this.bookings[i];
+
+            if(existingBooking.getVehicle().getPlate().equals(plate)){
+                Date existingBegin = existingBooking.getBegin();
+                Date existingEnd = existingBooking.getEnd();
+
+                if(begin.compareTo(existingBegin) <= 0 && end.compareTo(existingEnd) >= 0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean hasTimeConflict(Employee employee, Date begin, Date end){
+        for(int i = 0; i < this.size; i++) {
+            Booking existingBooking = this.bookings[i];
+
+            if (existingBooking.getEmployee().equals(employee)) {
+                Date existingBegin = existingBooking.getBegin();
+                Date existingEnd = existingBooking.getEnd();
+
+                if (begin.compareTo(existingBegin) <= 0 && end.compareTo(existingEnd) >= 0) {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Prints out bookings, order based upon the plates of the vehicles,
      * then the date obtained
      *
