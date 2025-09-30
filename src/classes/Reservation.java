@@ -262,6 +262,27 @@ public class Reservation {
     }
 
     /**
+     * Finds the earliest booking for a specific vehicle in the reservations list.
+     * A booking is considered earliest if its ending date is the smallest
+     * compared to other bookings of the same vehicle.
+     * @param plate the license plate of the vehicle whose earliest booking is being searched
+     * @return the earliest Booking object for the vehicle, or null if no bookings are found
+     */
+    public Booking getEarliestBooking(String plate) {
+        Booking earliest = null;
+        for (int i = 0; i < size; i++) {
+            Booking b = bookings[i];
+            if (b.getVehicle().getPlate().equals(plate)) {
+                if (earliest == null || b.getEnd().compareTo(earliest.getEnd()) < 0) {
+                    earliest = b;
+                }
+            }
+        }
+        return earliest;
+    }
+
+
+    /**
      * Helper method to printByDept(), which sorts the booking array
      * based upon departments then the employees using Insertion Sort.
      *
