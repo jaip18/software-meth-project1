@@ -64,7 +64,7 @@ public class Frontend {
         scanner.close();
     }
 
-    public void handleAddCommand(String request){
+    private void handleAddCommand(String request){
         String[] vehicleInfo = request.split(" ");
 
         try{
@@ -99,7 +99,7 @@ public class Frontend {
         }
     }
 
-    public void handleDeleteCommand(String request){
+    private void handleDeleteCommand(String request){
         String[] deleteParts = request.split(" ");
 
         // check if request is correctly formatted for delete commands
@@ -131,7 +131,7 @@ public class Frontend {
         System.out.println("Vehicle has been deleted from Fleet successfully.");
     }
 
-    public void handleBookingCommand(String request){
+    private void handleBookingCommand(String request){
         String[] bookingParts = request.split(" ");
 
         try{
