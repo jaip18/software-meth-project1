@@ -119,14 +119,14 @@ public class Booking {
      */
     public boolean isTooLong(){
         Calendar beginCal = Calendar.getInstance();
-        beginCal.set(this.begin.getYear(), this.begin.getMonth(), this.begin.getDay());
+        beginCal.set(this.begin.getYear(), this.begin.getMonth() - 1, this.begin.getDay());
         long beginTimeMillis = beginCal.getTimeInMillis();
 
         Calendar endCal = Calendar.getInstance();
-        endCal.set(this.end.getYear(), this.end.getMonth(), this.end.getDay());
+        endCal.set(this.end.getYear(), this.end.getMonth() - 1, this.end.getDay());
         long endTimeMillis = endCal.getTimeInMillis();
 
-        long duration = endTimeMillis - beginTimeMillis;
+        long duration = end.compareTo(begin);
 
         return duration > SEVEN_DAYS_MILLIS;
     }
@@ -134,19 +134,23 @@ public class Booking {
     /**
      * Two bookings are equal if they have the same vehicle, beginning date, and ending date.
      *
-     * @param o the object to compare with
+     * @param obj the object to compare with
      * @return true if obj is a Booking with the same vehicle,
      *         beginning date, and ending date, false otherwise
      */
     @Override
-    public boolean equals(Object o){
-        if (o instanceof Booking){
-            Booking booking = (Booking) o;
-            return booking.begin.equals(this.begin)
-                    && booking.end.equals(this.end)
-                    && booking.vehicle.equals(this.vehicle);
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
         }
-        return false;
+        if (obj == null || getClass() != obj.getClass()){
+            return false;
+        }
+        Booking booking = (Booking) obj;
+        return begin.equals(booking.begin) &&
+                end.equals(booking.end) &&
+                employee.equals(booking.employee) &&
+                vehicle.equals(booking.vehicle);
     }
 
     /**

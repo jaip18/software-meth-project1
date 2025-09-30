@@ -52,6 +52,9 @@ public class Fleet {
      * @param vehicle the vehicle that is being added
      */
     public void add(Vehicle vehicle) {
+       if (this.searchByPlate(vehicle.getPlate()) != null){
+           return;
+       }
        if (size == fleet.length) {
            grow();
        }
@@ -88,8 +91,10 @@ public class Fleet {
      * @return index of vehicle if it is found exists, -1 otherwise
      */
     public Vehicle searchByPlate(String plate) {
-        for (Vehicle vehicle : fleet) {
-            if (vehicle.getPlate().equals(plate)) {
+        for(int i = 0; i < this.size; i++){
+            Vehicle vehicle = this.fleet[i];
+
+            if (vehicle != null && vehicle.getPlate().equalsIgnoreCase(plate)) {
                 return vehicle;
             }
         }

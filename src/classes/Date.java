@@ -1,4 +1,5 @@
 package classes;
+import java.util.Calendar;
 /**
  * This class implements the Date object.
  * The Date class represents a date on the calendar in the form M/D/YYYY.
@@ -155,7 +156,8 @@ public class Date implements Comparable<Date>{
      * Checks the month, day, and year using leap year rulings.
      *
      * @return true if the date is valid, false otherwise.
-     */    public boolean isValid() {
+     */
+    public boolean isValid() {
         if (this.month < 1 || this.month > 12) {
             return false;
         }
@@ -168,10 +170,23 @@ public class Date implements Comparable<Date>{
         }
 
         return day > 0 && day <= days[month-1];
+    }
 
-     }
+    /**
+     * Checks if the date is today or a future date.
+     * @return true if the date is today or in the future, false otherwise.
+     */
+    public boolean isTodayOrFuture(){
+        Calendar today = Calendar.getInstance();
+        today.set(2025, 8, 29);
 
-     public static void main(String[] args) {
+        Calendar bookingDate = Calendar.getInstance();
+        bookingDate.set(this.getYear(), this.getMonth(), this.getDay());
+
+        return !bookingDate.before(today);
+    }
+
+    public static void main(String[] args) {
         // isValid tests
         System.out.println(new Date(2, 29, 2024).isValid()); // true (leap year)
         System.out.println(new Date(2, 29, 2019).isValid()); // false
@@ -179,7 +194,7 @@ public class Date implements Comparable<Date>{
         System.out.println(new Date(0, 10, 2020).isValid()); // false
         System.out.println(new Date(12, 31, 2025).isValid()); // true
         System.out.println(new Date(7, 32, 2020).isValid()); // false (day > 31)
-     }
+    }
 
 
 

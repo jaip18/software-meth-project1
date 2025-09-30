@@ -83,8 +83,24 @@ public class Frontend {
             int mileage = Integer.parseInt(vehicleInfo[4]);
 
             // check if vehicle is in fleet already
-            if(fleet.contains(fleet.searchByPlate(plate))){
-                System.out.println("Vehicle is already in Fleet. Cannot be added. ");
+//            if(fleet.contains(fleet.searchByPlate(plate))){
+//                System.out.println("Vehicle is already in Fleet. Cannot be added. ");
+//                return;
+//            }
+
+            // checks if mileage is valid
+            if(mileage < 0){
+                System.out.println("Invalid mileage: must be greater than or equal to 0.");
+                return;
+            }
+
+            // checks if date is valid and not in the future
+            if(!date.isValid()){
+                System.out.println("Invalid calendar date.");
+                return;
+            }
+            if(!date.isTodayOrFuture()){
+                System.out.println("Invalid date, must be either today or in the future.");
                 return;
             }
 
@@ -177,7 +193,7 @@ public class Frontend {
             }
 
             // checks on availability of vehicle
-            if(reservation.isAvailable(bookingPlate, beginDate, endDate)){
+            if(!reservation.isAvailable(bookingPlate, beginDate, endDate)){
                 System.out.println("Invalid booking, vehicle is not available during that interval.");
                 return;
             }
@@ -190,10 +206,15 @@ public class Frontend {
 
             Booking addedBooking = new Booking(beginDate, endDate, bookedBy, bookedVehicle);
 
-            // checks if booking is either too far in advance or too long
-            if(addedBooking.isTooFarInAdvance() || addedBooking.isTooLong()){
-                System.out.println("Invalid booking dates, either booking is over 7 days long " +
-                        "or vehicle is booked on a date beyond 3 months");
+            // checks if booking is either too far in advance
+            if(addedBooking.isTooFarInAdvance()){
+                System.out.println("Invalid booking dates, vehicle is booked on a date beyond 3 months.");
+                return;
+            }
+
+            // checks if booking is too long
+            if(addedBooking.isTooLong()){
+                System.out.println("Invalid booking dates, booking is over 7 days long.");
                 return;
             }
 

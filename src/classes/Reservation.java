@@ -156,7 +156,7 @@ public class Reservation {
                 Date existingBegin = existingBooking.getBegin();
                 Date existingEnd = existingBooking.getEnd();
 
-                if (!(end.compareTo(existingBegin) < 0 || begin.compareTo(existingEnd) > 0)) {
+                if (begin.compareTo(existingEnd) <= 0 && end.compareTo(existingBegin) >= 0) {
                     return false;
                 }
             }
@@ -182,7 +182,7 @@ public class Reservation {
                 Date existingBegin = existingBooking.getBegin();
                 Date existingEnd = existingBooking.getEnd();
 
-                if (!(end.compareTo(existingBegin) < 0 || begin.compareTo(existingEnd) > 0)) {
+                if (begin.compareTo(existingEnd) <= 0 && end.compareTo(existingBegin) >= 0) {
                     return true;
                 }
             }
@@ -280,7 +280,6 @@ public class Reservation {
         }
         return earliest;
     }
-
 
     /**
      * Helper method to printByDept(), which sorts the booking array
