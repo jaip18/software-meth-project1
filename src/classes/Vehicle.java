@@ -1,7 +1,7 @@
 package classes;
 /**
  * This class implements the Vehicle object
- * @author Aaman Gafur, Jai Patel
+ @author Aaman Gafur, Jai Patel
  */
 public class Vehicle implements Comparable<Vehicle> {
     private String plate; //license plate number
@@ -79,6 +79,14 @@ public class Vehicle implements Comparable<Vehicle> {
     }
 
     /**
+     * Updates the mileage of the vehicle.
+     * @param mileage the new mileage value to set
+     */
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
+    }
+
+    /**
      * Checks whether this vehicle is equal to another object.
      * Two vehicles are considered equal if they have the same license plate.
      * @param o the object being compared to this vehicle
@@ -100,30 +108,17 @@ public class Vehicle implements Comparable<Vehicle> {
     *
     * */
     @Override
-    public int compareTo(Vehicle other){
-        int plateCompare = this.plate.compareTo(other.plate);
-        if (plateCompare > 0){
+    public int compareTo(Vehicle other) {  // assume a.compareTo(b) is called
+        int makeCompare = this.make.compareTo(other.make); // uses enum's compareTo
+        if (makeCompare > 0) {
             return 1;
         }
-        if (plateCompare < 0){
+        if (makeCompare < 0) {
             return -1;
         }
-
+        // same make → compare by obtained date
         return this.obtained.compareTo(other.obtained);
     }
-//    public int compareTo(Vehicle other) {  // assume a.compareTo(b) is called
-//        int makeCompare = this.make.compareTo(other.make); // uses enum's compareTo
-//        if (makeCompare > 0) {
-//            return 1;
-//        }
-//        if (makeCompare < 0) {
-//            return -1;
-//        }
-//        // same make → compare by obtained date
-//        return this.obtained.compareTo(other.obtained);
-//    }
-
-
 
     /**
      * Return a textual representation of the Vehicle object.
