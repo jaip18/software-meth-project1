@@ -33,7 +33,7 @@ public class Reservation {
      * @return the size of the bookings array
      */
     public int getSize(){
-            return this.size;
+        return this.size;
     }
 
     // Define the constant for not found
@@ -49,7 +49,7 @@ public class Reservation {
     private int find(Booking book){
         Booking[] bookings = this.bookings;
 
-        for(int i = 0; i < bookings.length; i++){
+        for(int i = 0; i < size; i++){
             if(bookings[i].equals(book)){
                 return i;
             }
@@ -63,7 +63,7 @@ public class Reservation {
      * will have a length double of the previous array.
      */
     private void grow(){
-        int capacity = this.size * 2;
+        int capacity = this.bookings.length +4;
 
         Booking[] resizedList = new Booking[capacity];
 
@@ -130,8 +130,8 @@ public class Reservation {
      * @return true if booked, false if not booked
      */
     public boolean isBooked(String plate){
-        for(Booking booking: this.getBookings()){
-            if(booking.getVehicle().getPlate().equals(plate)){
+        for (int i = 0; i < size; i++) {
+            if (bookings[i].getVehicle().getPlate().equals(plate)) {
                 return true;
             }
         }
@@ -182,8 +182,8 @@ public class Reservation {
                 Date existingBegin = existingBooking.getBegin();
                 Date existingEnd = existingBooking.getEnd();
 
-                if (begin.compareTo(existingBegin) <= 0 && end.compareTo(existingEnd) >= 0) {
-                    return false;
+                if (!(end.compareTo(existingBegin) < 0 || begin.compareTo(existingEnd) > 0)) {
+                    return true;
                 }
             }
         }
@@ -197,16 +197,15 @@ public class Reservation {
      *
      */
     public void printByVehicle(){
-        if(this.size == 0){
-            System.out.println("No reservation have been made.");
+        if (this.size == 0) {
+            System.out.println("No reservations have been made.");
             return;
         }
 
-        Booking[] array = this.bookings;
-        insertionSortByPlate(bookings);
+        insertionSortByPlate(this.bookings);
 
-        for(Booking booking: array){
-            System.out.println(booking);
+        for (int i = 0; i < size; i++) {
+            System.out.println(bookings[i]);
         }
     }
 
@@ -216,22 +215,26 @@ public class Reservation {
      *
      * @param array booking array to be sorted in place by plate
      */
-    private void insertionSortByPlate(Booking[] array){
+    private void insertionSortByPlate(Booking[] array) {
         int n = this.size;
 
-        for(int i = 1; i < n; i++){
+        for (int i = 1; i < n; i++) {
             Booking keyBooking = array[i];
             String keyPlate = keyBooking.getVehicle().getPlate();
+            Date keyBegin = keyBooking.getBegin();
 
             int j = i - 1;
 
-            while(j >= 0){
+            while (j >= 0) {
                 String comparePlate = array[j].getVehicle().getPlate();
-                if(keyPlate.compareTo(comparePlate) < 0){
+                Date compareBegin = array[j].getBegin();
+
+                // Sort by plate first, then by begin date if plates are equal
+                if (keyPlate.compareTo(comparePlate) < 0 ||
+                        (keyPlate.equals(comparePlate) && keyBegin.compareTo(compareBegin) < 0)) {
                     array[j + 1] = array[j];
-                    j = j - 1;
-                }
-                else {
+                    j--;
+                } else {
                     break;
                 }
             }
@@ -251,11 +254,10 @@ public class Reservation {
             return;
         }
 
-        Booking[] array = this.bookings;
         insertionSortByDept(bookings);
 
-        for(Booking booking: array){
-            System.out.println(booking);
+        for (int i = 0; i < size; i++) {
+            System.out.println(bookings[i]);
         }
     }
 
@@ -268,19 +270,23 @@ public class Reservation {
     private void insertionSortByDept(Booking[] array){
         int n = this.size;
 
-        for(int i = 1; i < n; i++){
+        for (int i = 1; i < n; i++) {
             Booking keyBooking = array[i];
             Department keyDept = keyBooking.getEmployee().getDepartment();
+            String keyEmployee = keyBooking.getEmployee().name();
 
             int j = i - 1;
 
-            while(j >= 0){
+            while (j >= 0) {
                 Department compareDept = array[j].getEmployee().getDepartment();
-                if(keyDept.compareTo(compareDept) < 0){
+                String compareEmployee = array[j].getEmployee().name();
+
+                // Sort by department first, then by employee if departments are equal
+                if (keyDept.compareTo(compareDept) < 0 ||
+                        (keyDept == compareDept && keyEmployee.compareTo(compareEmployee) < 0)) {
                     array[j + 1] = array[j];
-                    j = j - 1;
-                }
-                else {
+                    j--;
+                } else {
                     break;
                 }
             }
