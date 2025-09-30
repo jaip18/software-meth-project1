@@ -60,7 +60,7 @@ public class Reservation {
 
     /**
      * Resizes the amount of bookings the array can handle. The new resized array
-     * will have a length double of the previous array.
+     * will have a length of the previous array plus 4.
      */
     private void grow(){
         int capacity = this.bookings.length +4;
