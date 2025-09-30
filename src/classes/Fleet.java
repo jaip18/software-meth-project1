@@ -27,13 +27,12 @@ public class Fleet {
      */
     private int find(Vehicle vehicle) {
         for (int i = 0; i < size; i++) {
-            if (fleet[i].equals(vehicle)) {
+            if (this.fleet[i].equals(vehicle)) {
                 return i;
             }
         }
         return NOT_FOUND;
     } //search the given vehicle
-
 
     /**
      * Grows the fleet capacity by 4.
@@ -81,6 +80,20 @@ public class Fleet {
     public boolean contains(Vehicle vehicle) {
         int index = find(vehicle);
         return index != NOT_FOUND;
+    }
+
+    /**
+     * Checks whether the fleet contains the vehicle, according to its plate.
+     * @param plate the vehicle.plate that needs to be checked
+     * @return index of vehicle if it is found exists, -1 otherwise
+     */
+    public Vehicle searchByPlate(String plate) {
+        for (Vehicle vehicle : fleet) {
+            if (vehicle.getPlate().equals(plate)) {
+                return vehicle;
+            }
+        }
+        return null;
     }
 
     /**
