@@ -60,7 +60,7 @@ public class Reservation {
 
     /**
      * Resizes the amount of bookings the array can handle. The new resized array
-     * will have a length double of the previous array.
+     * will have a length of the previous array plus 4.
      */
     private void grow(){
         int capacity = this.bookings.length +4;
@@ -156,7 +156,7 @@ public class Reservation {
                 Date existingBegin = existingBooking.getBegin();
                 Date existingEnd = existingBooking.getEnd();
 
-                if(begin.compareTo(existingBegin) <= 0 && end.compareTo(existingEnd) >= 0){
+                if (!(end.compareTo(existingBegin) < 0 || begin.compareTo(existingEnd) > 0)) {
                     return false;
                 }
             }
@@ -250,7 +250,7 @@ public class Reservation {
      */
     public void printByDept(){
         if(this.size == 0){
-            System.out.println("No reservation have been made.");
+            System.out.println("No reservations have been made.");
             return;
         }
 
@@ -260,6 +260,27 @@ public class Reservation {
             System.out.println(bookings[i]);
         }
     }
+
+    /**
+     * Finds the earliest booking for a specific vehicle in the reservations list.
+     * A booking is considered earliest if its ending date is the smallest
+     * compared to other bookings of the same vehicle.
+     * @param plate the license plate of the vehicle whose earliest booking is being searched
+     * @return the earliest Booking object for the vehicle, or null if no bookings are found
+     */
+    public Booking getEarliestBooking(String plate) {
+        Booking earliest = null;
+        for (int i = 0; i < size; i++) {
+            Booking b = bookings[i];
+            if (b.getVehicle().getPlate().equals(plate)) {
+                if (earliest == null || b.getEnd().compareTo(earliest.getEnd()) < 0) {
+                    earliest = b;
+                }
+            }
+        }
+        return earliest;
+    }
+
 
     /**
      * Helper method to printByDept(), which sorts the booking array
