@@ -42,13 +42,14 @@ public class Frontend {
                     handleBookingCommand(request);
                     break;
                 case 'C': // cancel booking command
-
+                    handleCancel(request);
                     break;
                 case 'R': // return vehicle command
-
+                    handleReturn(request);
                     break;
                 case 'P': // print command
                     String pCommand = request.substring(0,2);
+                    handlePrint(pCommand);
                     break;
                 case 'Q': // quit command
                     isActive = false;
@@ -67,6 +68,7 @@ public class Frontend {
         String[] vehicleInfo = request.split(" ");
 
         try{
+            // check if request is properly formatted for add command
             if(vehicleInfo.length != 5){
                 System.out.println("Invalid input format for ADD command. Format follows" +
                         "A plate MM/DD/YYYY MAKE mileage");
@@ -76,9 +78,15 @@ public class Frontend {
             String dateString = vehicleInfo[2];
             String[] dateInfo = dateString.split("/");
             Date date = new Date(Integer.parseInt(dateInfo[0]),
-                    Integer.parseInt(dateInfo[0]), Integer.parseInt(dateInfo[1]));
+                    Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2]));
             Make make = Make.valueOf(vehicleInfo[3].toUpperCase());
             int mileage = Integer.parseInt(vehicleInfo[4]);
+
+            // check if vehicle is in fleet already
+            if(fleet.contains(fleet.searchByPlate(plate))){
+                System.out.println("Vehicle is already in Fleet. Cannot be added. ");
+                return;
+            }
 
             fleet.add(new Vehicle(plate, date, make, mileage));
             System.out.println("Vehicle added to Fleet successfully.");
@@ -94,6 +102,7 @@ public class Frontend {
     public void handleDeleteCommand(String request){
         String[] deleteParts = request.split(" ");
 
+        // check if request is correctly formatted for delete commands
         if(deleteParts.length != 2){
             System.out.println("Invalid input format for DELETE command. Format follows" +
                     "D plate");
@@ -104,6 +113,7 @@ public class Frontend {
         Vehicle vehicle = fleet.searchByPlate(deletePlate);
         boolean isInFleet = (vehicle != null);
 
+        // check if vehicle is in fleet, so it can be deleted
         if(!isInFleet){
             System.out.println("Vehicle is not in Fleet.");
             return;
@@ -111,6 +121,7 @@ public class Frontend {
 
         boolean hasBookings = reservation.isBooked(deletePlate);
 
+        // check if vehicle has bookings before deleting
         if(hasBookings){
             System.out.println("Vehicle is already booked, cannot be deleted.");
             return;
@@ -124,6 +135,8 @@ public class Frontend {
         String[] bookingParts = request.split(" ");
 
         try{
+
+            // check if request is properly formatted for booking command
             if(bookingParts.length != 5){
                 System.out.println("Invalid input format for BOOKING command. Format follows" +
                         "B start_date end_date plate employee ");
@@ -145,30 +158,39 @@ public class Frontend {
 
             Employee bookedBy = Employee.valueOf(bookingParts[4].toUpperCase());
 
+            // checks if both dates are valid
             if(!beginDate.isValid() || !endDate.isValid()){
                 System.out.println("Invalid begin or end date of booking");
                 return;
             }
 
+            // checks if the end date is before the start date
+            if(endDate.compareTo(beginDate) < 0){
+                System.out.println("Invalid dates, the beginning date must be before the end date");
+                return;
+            }
+
+            // checks if vehicle being requested exists
             if(bookedVehicle == null){
                 System.out.println("Invalid booking, vehicle does not exist in fleet.");
                 return;
             }
 
-            //The vehicle associated with the license plate number is not available for the dates entered.
+            // checks on availability of vehicle
             if(reservation.isAvailable(bookingPlate, beginDate, endDate)){
                 System.out.println("Invalid booking, vehicle is not available during that interval.");
                 return;
             }
 
-            //The employee has an existing booking conflicting with the dates entered.
-            if(!reservation.hasTimeConflict(bookedBy, beginDate, endDate)){
+            // checks if employee is available for the request booking
+            if(reservation.hasTimeConflict(bookedBy, beginDate, endDate)){
                 System.out.println("Invalid booking, employee entered has a time conflict.");
                 return;
             }
 
             Booking addedBooking = new Booking(beginDate, endDate, bookedBy, bookedVehicle);
 
+            // checks if booking is either too far in advance or too long
             if(addedBooking.isTooFarInAdvance() || addedBooking.isTooLong()){
                 System.out.println("Invalid booking dates, either booking is over 7 days long " +
                         "or vehicle is booked on a date beyond 3 months");
@@ -186,5 +208,124 @@ public class Frontend {
         }
     }
 
+    private void handleCancel(String line) {
+        try {
+            String[] parts = line.split("\\s+");
+            if (parts.length != 4) {
+                System.out.println("Invalid input format for CANCEL command. Format: C begin_date end_date plate");
+                return;
+            }
+
+            // Parse begin date
+            String[] beginInfo = parts[1].split("/");
+            Date begin = new Date(
+                    Integer.parseInt(beginInfo[0]),
+                    Integer.parseInt(beginInfo[1]),
+                    Integer.parseInt(beginInfo[2])
+            );
+
+            // Parse end date
+            String[] endInfo = parts[2].split("/");
+            Date end = new Date(
+                    Integer.parseInt(endInfo[0]),
+                    Integer.parseInt(endInfo[1]),
+                    Integer.parseInt(endInfo[2])
+            );
+
+            String plate = parts[3];
+
+            // Build a "dummy booking" for lookup
+            Vehicle dummyVehicle = fleet.searchByPlate(plate);
+            if (dummyVehicle == null) {
+                System.out.println("Booking cancellation failed: vehicle not found in fleet.");
+                return;
+            }
+
+            // Dummy employee since equals() only cares about vehicle, begin, and end
+            Booking dummyBooking = new Booking(begin, end, Employee.KAUR, dummyVehicle);
+
+            if (reservation.contains(dummyBooking)) {
+                reservation.remove(dummyBooking);
+                System.out.println("Booking successfully cancelled.");
+            } else {
+                System.out.println("Booking cancellation failed: no matching booking found.");
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR: Invalid date or booking format.");
+        }
+    }
+
+    private void handleReturn(String line) {
+        try {
+            String[] parts = line.split("\\s+");
+            if (parts.length != 4) {
+                System.out.println("Invalid input format for RETURN command. Format: R end_date plate mileage");
+                return;
+            }
+
+            // Parse end date
+            String[] endInfo = parts[1].split("/");
+            Date endDate = new Date(
+                    Integer.parseInt(endInfo[0]),
+                    Integer.parseInt(endInfo[1]),
+                    Integer.parseInt(endInfo[2])
+            );
+
+            String plate = parts[2];
+            int newMileage = Integer.parseInt(parts[3]);
+
+            // Find vehicle
+            Vehicle vehicle = fleet.searchByPlate(plate);
+            if (vehicle == null) {
+                System.out.println("Return failed: vehicle not found in fleet.");
+                return;
+            }
+
+            // Find earliest booking for that vehicle
+            Booking booking = reservation.getEarliestBooking(plate);
+            if (booking == null) {
+                System.out.println("Return failed: no active booking for this vehicle.");
+                return;
+            }
+
+            // Check that the end date matches the earliest booking
+            if (!endDate.equals(booking.getEnd())) {
+                System.out.println("Return failed: end date does not match the earliest booking end date.");
+                return;
+            }
+
+            // Validate mileage
+            if (newMileage <= vehicle.getMileage()) {
+                System.out.println("Return failed: mileage cannot be less than or equal to current mileage.");
+                return;
+            }
+
+            // Create Trip and add to tripList
+            Trip trip = new Trip(booking, vehicle.getMileage(), newMileage);
+            triplist.add(trip);
+
+            // Update mileage in fleet
+            vehicle.setMileage(newMileage);
+
+            // Remove booking
+            reservation.remove(booking);
+
+            System.out.println("Vehicle returned successfully. Trip recorded.");
+        } catch (NumberFormatException e) {
+            System.out.println("ERROR: Invalid number format for mileage or date.");
+        } catch (Exception e) {
+            System.out.println("ERROR: Invalid return command format.");
+        }
+    }
+
+    private void handlePrint(String line) {
+        switch (line) {
+            case "PF" -> fleet.printByMake();
+            case "PR" -> reservation.printByVehicle();
+            case "PD" -> reservation.printByDept();
+            case "PT" -> triplist.print();
+            default -> System.out.println("Invalid print command.");
+        }
+    }
 
 }
