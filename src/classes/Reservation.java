@@ -250,7 +250,7 @@ public class Reservation {
      */
     public void printByDept(){
         if(this.size == 0){
-            System.out.println("No reservation have been made.");
+            System.out.println("No reservations have been made.");
             return;
         }
 
