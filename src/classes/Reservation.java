@@ -156,7 +156,7 @@ public class Reservation {
                 Date existingBegin = existingBooking.getBegin();
                 Date existingEnd = existingBooking.getEnd();
 
-                if(begin.compareTo(existingBegin) < 0 && end.compareTo(existingEnd) > 0){
+                if (!(end.compareTo(existingBegin) < 0 || begin.compareTo(existingEnd) > 0)) {
                     return false;
                 }
             }
