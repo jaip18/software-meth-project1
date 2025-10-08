@@ -116,19 +116,19 @@ public class Fleet {
             int j = i - 1;
 
             while (j >= 0) {
-                int compareMake = key.getMake().compareTo(fleet[j].getMake());
-                boolean shouldShift = false;
 
-                if (compareMake < 0) {
-                    shouldShift = true;
-                } else if (compareMake == 0 &&
-                        key.getObtained().compareTo(fleet[j].getObtained()) < 0) {
-                    shouldShift = true;
-                }
+                int compareMake = fleet[j].getMake().compareTo(key.getMake());
 
-                if (shouldShift) {
+                if (compareMake > 0) {
                     fleet[j + 1] = fleet[j];
                     j--;
+                } else if (compareMake == 0) {
+                    if (fleet[j].getObtained().compareTo(key.getObtained()) > 0) {
+                        fleet[j + 1] = fleet[j];
+                        j--;
+                    } else {
+                        break;
+                    }
                 } else {
                     break;
                 }

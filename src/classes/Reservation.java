@@ -261,10 +261,11 @@ public class Reservation {
 
         System.out.println("*List of reservations ordered by department and employee.");
         for (int i = 0; i < size; i++) {
-            if (!dept.equals(bookings[i].getEmployee().getDepartment().toString())){
+
+            if (!dept.equals(bookings[i].getEmployee().getDepartment().toString())) {
                 dept = bookings[i].getEmployee().getDepartment().toString();
+                System.out.println("--" + dept + "--");
             }
-            System.out.println("--" + dept + "--");
             System.out.println(bookings[i]);
         }
         System.out.println("end of list.");

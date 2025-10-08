@@ -9,9 +9,9 @@ package classes;
  */
 
 public enum Department {
-    CS, // Computer Science
-    EE, // Electrical Engineering
-    ITI, // Information Technology and Informatics
-    MATH, // Math
-    BAIT // Business Analytics and Information Technology
+    BAIT, // Business Analytics and Information Technology BAIT
+    CS, // Computer Science CS
+    EE, // Electrical Engineering EE
+    ITI, // Information Technology and Informatics ITI
+    MATH // Math MATH
 }
