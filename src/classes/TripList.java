@@ -92,17 +92,18 @@ public class TripList {
      */
     public void print(){
         if(this.getSize() == 0){
-            System.out.println("No trips have been completed yet.");
+            System.out.println("There is no archived trips.");
             return;
         }
 
         Trip[] array = this.toArray();
         insertionSort(array);
 
-        System.out.println("*** Completed trips (Sorted by End Date) ***");
+        System.out.println("*List of completed trips ordered by ending date.");
         for (Trip trip : array) {
             System.out.println(trip);
         }
+        System.out.println("*end of list.");
     }
 
     /**

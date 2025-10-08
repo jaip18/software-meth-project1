@@ -120,15 +120,23 @@ public class Booking {
     public boolean isTooLong(){
         Calendar beginCal = Calendar.getInstance();
         beginCal.set(this.begin.getYear(), this.begin.getMonth() - 1, this.begin.getDay());
+        beginCal.set(Calendar.HOUR_OF_DAY, 0);
+        beginCal.set(Calendar.MINUTE, 0);
+        beginCal.set(Calendar.SECOND, 0);
+        beginCal.set(Calendar.MILLISECOND, 0);
         long beginTimeMillis = beginCal.getTimeInMillis();
 
         Calendar endCal = Calendar.getInstance();
         endCal.set(this.end.getYear(), this.end.getMonth() - 1, this.end.getDay());
+        endCal.set(Calendar.HOUR_OF_DAY, 0);
+        endCal.set(Calendar.MINUTE, 0);
+        endCal.set(Calendar.SECOND, 0);
+        endCal.set(Calendar.MILLISECOND, 0);
         long endTimeMillis = endCal.getTimeInMillis();
 
-        long duration = end.compareTo(begin);
+        long duration = endTimeMillis - beginTimeMillis;
 
-        return duration > SEVEN_DAYS_MILLIS;
+        return duration >= SEVEN_DAYS_MILLIS;
     }
 
     /**
@@ -149,7 +157,6 @@ public class Booking {
         Booking booking = (Booking) obj;
         return begin.equals(booking.begin) &&
                 end.equals(booking.end) &&
-                employee.equals(booking.employee) &&
                 vehicle.equals(booking.vehicle);
     }
 

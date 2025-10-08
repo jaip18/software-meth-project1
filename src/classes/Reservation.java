@@ -49,8 +49,8 @@ public class Reservation {
     private int find(Booking book){
         Booking[] bookings = this.bookings;
 
-        for(int i = 0; i < size; i++){
-            if(bookings[i].equals(book)){
+        for(int i = 0; i < bookings.length; i++){
+            if(book.equals(bookings[i])){
                 return i;
             }
         }
@@ -198,15 +198,17 @@ public class Reservation {
      */
     public void printByVehicle(){
         if (this.size == 0) {
-            System.out.println("No reservations have been made.");
+            System.out.println("There is no booking record.");
             return;
         }
 
         insertionSortByPlate(this.bookings);
 
+        System.out.println("*List of reservations ordered by license plate number and beginning date.");
         for (int i = 0; i < size; i++) {
             System.out.println(bookings[i]);
         }
+        System.out.println("*end of list.");
     }
 
     /**
@@ -250,15 +252,22 @@ public class Reservation {
      */
     public void printByDept(){
         if(this.size == 0){
-            System.out.println("No reservations have been made.");
+            System.out.println("There is no booking record.");
             return;
         }
 
         insertionSortByDept(bookings);
+        String dept = "";
 
+        System.out.println("*List of reservations ordered by department and employee.");
         for (int i = 0; i < size; i++) {
+            if (!dept.equals(bookings[i].getEmployee().getDepartment().toString())){
+                dept = bookings[i].getEmployee().getDepartment().toString();
+            }
+            System.out.println("--" + dept + "--");
             System.out.println(bookings[i]);
         }
+        System.out.println("end of list.");
     }
 
     /**
