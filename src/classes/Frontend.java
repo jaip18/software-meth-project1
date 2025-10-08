@@ -24,39 +24,31 @@ public class Frontend {
         Scanner scanner = new Scanner(System.in);
         boolean isActive = true;
         System.out.println("Vehicle Management System is live.");
-
         while(isActive){
             String request = scanner.nextLine().trim();
             if(request.isEmpty()) continue;
             char command = request.toUpperCase().charAt(0);
             switch(command) {
                 case 'A': // add vehicle command
-                    System.out.print("> ");
                     handleAddCommand(request);
                     break;
                 case 'D': // delete vehicle command
-                    System.out.print("> ");
                     handleDeleteCommand(request);
                     break;
                 case 'B': // book vehicle command
-                    System.out.print("> ");
                     handleBookingCommand(request);
                     break;
                 case 'C': // cancel booking command
-                    System.out.print("> ");
                     handleCancel(request);
                     break;
                 case 'R': // return vehicle command
-                    System.out.print("> ");
                     handleReturn(request);
                     break;
                 case 'P': // print command
-                    System.out.print("> ");
                     String pCommand = request.substring(0,2);
                     handlePrint(pCommand);
                     break;
                 case 'Q': // quit command
-                    System.out.print("> ");
                     isActive = handleQuit(request);
                     break;
                 default:
@@ -64,11 +56,11 @@ public class Frontend {
                     break;
             }
         }
-
         scanner.close();
     }
 
     private void handleAddCommand(String request){
+        System.out.print("> ");
         String[] vehicleInfo = request.split(" ");
 
         try{
@@ -120,6 +112,7 @@ public class Frontend {
     }
 
     private void handleDeleteCommand(String request){
+        System.out.print("> ");
         String[] deleteParts = request.split(" ");
 
         // check if request is correctly formatted for delete commands
@@ -151,6 +144,7 @@ public class Frontend {
     }
 
     private void handleBookingCommand(String request){
+        System.out.print("> ");
         String[] bookingParts = request.split("\\s+");
 
         try{
@@ -243,6 +237,7 @@ public class Frontend {
     }
 
     private void handleCancel(String line) {
+        System.out.print("> ");
         try {
             String[] parts = line.split("\\s+");
             if (parts.length != 4) {
@@ -290,6 +285,7 @@ public class Frontend {
     }
 
     private void handleReturn(String line) {
+        System.out.print("> ");
         try {
             String[] parts = line.split("\\s+");
             if (parts.length != 4) {
@@ -363,6 +359,7 @@ public class Frontend {
     }
 
     private void handlePrint(String line) {
+        System.out.print("> ");
         switch (line) {
             case "PF" -> fleet.printByMake();
             case "PR" -> reservation.printByVehicle();
@@ -373,6 +370,7 @@ public class Frontend {
     }
 
     private boolean handleQuit(String line){
+        System.out.print("> ");
         if (line.equals("q")){
             System.out.println("q - invalid command!");
             return true;
